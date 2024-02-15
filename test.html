@@ -1,40 +1,30 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Simulation Plein Écran sur iOS</title>
+    <title>Upload et Affichage d'Image</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
         }
-        .fullscreen-image {
-            background-size: cover;
-            background-position: center;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-        }
         #imageToDisplay {
-            display: none; /* Cache initialement l'image */
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Assure que l'image couvre tout l'écran sans perdre ses proportions */
+            max-width: 100%;
+            max-height: 100vh;
+            display: none; /* Cache l'image initialement */
         }
     </style>
 </head>
 <body>
 
 <input type="file" id="fileInput" accept="image/*">
-<div class="fullscreen-image">
-    <img id="imageToDisplay">
-</div>
+<img id="imageToDisplay">
 
 <script>
 document.getElementById('fileInput').addEventListener('change', function(event) {
@@ -47,6 +37,9 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
             img.style.display = 'block'; // Affiche l'image
         };
         reader.readAsDataURL(file);
+    } else {
+        // Si aucun fichier n'est sélectionné ou si l'utilisateur annule la sélection
+        alert("Aucun fichier sélectionné ou opération annulée.");
     }
 });
 </script>
