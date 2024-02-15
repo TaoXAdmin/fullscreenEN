@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Upload et Affichage Plein Écran</title>
+    <title>Upload et Affichage Plein Écran sur Safari</title>
     <style>
         #imageToDisplay {
             max-width: 100%;
@@ -13,12 +13,11 @@
 </head>
 <body>
 
-<input type="file" id="fileInput" accept="image/*">
-<button id="goFullScreen">Afficher en plein écran</button>
+<input type="file" id="fileInput" accept="image/*" style="margin-bottom: 10px;">
+<button id="goFullScreen" style="display: none;">Afficher en plein écran</button>
 <img id="imageToDisplay">
 
 <script>
-// Gère le téléchargement de l'image
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -27,22 +26,23 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
             const img = document.getElementById('imageToDisplay');
             img.src = e.target.result;
             img.style.display = 'block'; // Affiche l'image
+            // Montre le bouton pour le plein écran après le chargement de l'image
+            document.getElementById('goFullScreen').style.display = 'inline';
         };
         reader.readAsDataURL(file);
     }
 });
 
-// Active le mode plein écran pour l'image
 document.getElementById('goFullScreen').addEventListener('click', function() {
     const img = document.getElementById('imageToDisplay');
     if (img.requestFullscreen) {
-        img.requestFullscreen();
-    } else if (img.mozRequestFullScreen) { /* Firefox */
-        img.mozRequestFullScreen();
+        img.requestFullscreen().catch(err => {
+            alert("Erreur lors de la tentative de passage en plein écran: " + err.message);
+        });
     } else if (img.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-        img.webkitRequestFullscreen();
-    } else if (img.msRequestFullscreen) { /* IE/Edge */
-        img.msRequestFullscreen();
+        img.webkitRequestFullscreen().catch(err => {
+            alert("Erreur lors de la tentative de passage en plein écran: " + err.message);
+        });
     }
 });
 </script>
