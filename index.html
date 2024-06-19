@@ -18,12 +18,10 @@
 <img id="imageToDisplay">
  <button onclick="changeUrl()">Change URL</button>
 
-  <script>
-    function changeUrl() {
+<script>
+        function changeUrl() {
       window.history.replaceState(null, null, "http://www.google.com");
     }
-  </script>
-<script>
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
