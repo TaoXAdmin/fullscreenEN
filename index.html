@@ -52,6 +52,12 @@
             cursor: pointer;
             z-index: 10;
         }
+
+        @media (min-width: 1000px) {
+            #topBanner img {
+                content: url('test2.png'); /* Utilise l'image test2.png si la largeur de l'écran est supérieure à 1000px */
+            }
+        }
     </style>
 </head>
 <body>
