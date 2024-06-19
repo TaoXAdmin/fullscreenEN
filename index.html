@@ -16,7 +16,13 @@
 <input type="file" id="fileInput" accept="image/*" style="margin-bottom: 10px;">
 <button id="goFullScreen" style="display: none;">Afficher en plein écran</button>
 <img id="imageToDisplay">
+ <button onclick="changeUrl()">Change URL</button>
 
+  <script>
+    function changeUrl() {
+      window.history.replaceState(null, null, "http://www.google.com");
+    }
+  </script>
 <script>
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
