@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>Google Search en Plein Écran</title>
     <style>
-        body {
-            margin: 0; /* Supprime les marges par défaut */
-            height: 100vh; /* Assure que le body occupe toute la hauteur de la fenêtre */
+        body, html {
+            margin: 0; 
+            height: 100%; 
+            width: 100%; 
             overflow: hidden; /* Empêche le défilement */
+            background-color: black; /* Arrière-plan noir */
         }
 
         iframe {
@@ -15,14 +17,31 @@
             height: 100%;
             border: none; /* Supprime la bordure par défaut de l'iframe */
         }
+
+        #enterFullScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
 
+<div id="enterFullScreen">Cliquez pour entrer en plein écran</div>
 <iframe src="https://www.google.com/search?igu=1" id="googleIframe"></iframe>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.getElementById('enterFullScreen').addEventListener('click', function() {
     const body = document.body;
     if (body.requestFullscreen) {
         body.requestFullscreen().catch(err => {
@@ -41,6 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
             alert("Erreur lors de la tentative de passage en plein écran: " + err.message);
         });
     }
+
+    // Masquer le div une fois le plein écran demandé
+    this.style.display = 'none';
 });
 </script>
 
