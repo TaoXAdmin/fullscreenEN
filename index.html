@@ -22,7 +22,8 @@
             align-items: center;
             background-color: black; /* Assure que le fond derrière l'image est noir */
             overflow: hidden; /* Assure que l'image ne dépasse pas */
-            
+             cursor: pointer; /* Change le curseur pour indiquer que l'élément est cliquable */
+            z-index: 5; /* S'assure que la bannière est au-dessus de l'iframe */
         }
 
         #topBanner img {
@@ -64,9 +65,9 @@
 <body>
 
 <div id="topBanner">
-
+    <a href="https://www.google.com">
     <img src="test.png" alt="Banner Image">
-
+    </a>
 </div>
 <div id="enterFullScreen">Cliquez pour entrer en plein écran</div>
 <iframe src="https://taoxadmin.github.io/Cards/" id="googleIframe"></iframe>
@@ -96,7 +97,7 @@ document.getElementById('enterFullScreen').addEventListener('click', function() 
     this.style.display = 'none';
 });
  
-});
+
 </script>
 
 </body>
