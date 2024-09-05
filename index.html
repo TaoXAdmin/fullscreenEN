@@ -3,60 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vidéo Plein Écran sur Safari iPhone</title>
+    <title>Vidéo Plein Écran</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #000;
         }
-
         video {
             max-width: 100%;
-            max-height: 100%;
-        }
-
-        #fullscreenBtn {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
+            height: auto;
+            background-color: #000;
         }
     </style>
 </head>
 <body>
 
-    <div>
-        <!-- Élement vidéo -->
-        <video id="myVideo" controls>
-            <source src="" type="video/mp4">
-           
-        </video>
-        
-        <!-- Bouton pour passer en plein écran -->
-        <button id="fullscreenBtn">Plein écran</button>
-    </div>
+    <video id="myVideo" playsinline controls x-webkit-airplay="allow" webkit-playsinline controlslist="nodownload" preload="auto" width="100%" height="auto">
+        <source src="https://www.example.com/path-to-your-video.mp4" type="video/mp4">
+       test
+    </video>
 
     <script>
         const video = document.getElementById('myVideo');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-        // Fonction pour entrer en plein écran
-        fullscreenBtn.addEventListener('click', function() {
+        // Gestion du mode plein écran pour les navigateurs qui le supportent
+        video.addEventListener('dblclick', () => {
             if (video.requestFullscreen) {
                 video.requestFullscreen();
-            } else if (video.webkitRequestFullscreen) { /* Safari */
+            } else if (video.webkitRequestFullscreen) { // Safari support
                 video.webkitRequestFullscreen();
-            } else if (video.msRequestFullscreen) { /* IE11 */
+            } else if (video.msRequestFullscreen) { // IE/Edge support
                 video.msRequestFullscreen();
+            }
+        });
+
+        // Pour forcer le plein écran sur les boutons de contrôles natifs (iOS)
+        video.addEventListener('webkitfullscreenchange', function() {
+            if (!document.webkitFullscreenElement) {
+                video.play();
             }
         });
     </script>
