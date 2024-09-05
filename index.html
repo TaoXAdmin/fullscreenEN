@@ -8,10 +8,12 @@
         body {
             margin: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #000;
+            color: white;
         }
 
         .video-container {
@@ -37,6 +39,13 @@
             z-index: 2;
             pointer-events: none;
         }
+
+        .transcription, .url-constructed {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
@@ -46,9 +55,15 @@
         </video>
     </div>
 
+    <!-- Zone pour afficher la transcription et l'URL construite -->
+    <div class="transcription" id="transcriptionText">Transcription : </div>
+    <div class="url-constructed" id="wikipediaUrlText">URL Wikipedia construite : </div>
+
     <script>
         const videoContainer = document.getElementById('videoContainer');
         const video = document.getElementById('myVideo');
+        const transcriptionText = document.getElementById('transcriptionText');
+        const wikipediaUrlText = document.getElementById('wikipediaUrlText');
 
         // Fonction pour activer le plein écran
         function openFullscreen(elem) {
@@ -107,6 +122,9 @@
         }
 
         function analyzeTranscript(transcript) {
+            // Afficher la transcription en temps réel
+            transcriptionText.innerHTML = "Transcription : " + transcript;
+
             // Si on détecte "quoi", commencer à capturer les mots suivants
             if (transcript.includes("quoi")) {
                 captureNextWords = true;
@@ -124,7 +142,9 @@
                 }
                 captureNextWords = false;  // Arrêter la capture après avoir intercepté les mots
                 wikipediaUrl = wikipediaUrl.slice(0, -1);  // Supprimer le dernier underscore "_"
-                console.log("URL Wikipedia générée : " + wikipediaUrl);
+
+                // Afficher l'URL construite en temps réel
+                wikipediaUrlText.innerHTML = "URL Wikipedia construite : " + wikipediaUrl;
             }
 
             // Redirection vers Wikipedia si le mot "partout" est détecté
