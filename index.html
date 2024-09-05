@@ -122,7 +122,7 @@
         }
 
         function analyzeTranscript(transcript) {
-            // Afficher la transcription en temps réel
+            // Réinitialiser la transcription visible à chaque nouvelle entrée
             transcriptionText.innerHTML = "Transcription : " + transcript;
 
             // Si on détecte "quoi", commencer à capturer les mots suivants
@@ -137,7 +137,7 @@
                 let urlWords = [];
                 for (let word of words) {
                     // Vérifier si le mot commence par une majuscule et exclure certains mots
-                    if (word[0] === word[0].toUpperCase() && !["Je", "Il", "Et", "C'", "À"].includes(word)) {
+                    if (word[0] === word[0].toUpperCase() && !["Je", "Il", "Et", "C'", "À", "J'"].includes(word)) {
                         urlWords.push(word);
                     }
                 }
@@ -168,10 +168,10 @@
 
             recognition.onresult = (event) => {
                 let transcript = '';
-                for (let i = 0; i < event.results.length; i++) {
-                    transcript += event.results[i][0].transcript + ' ';  // Ajouter un espace entre chaque capture
-                }
-                analyzeTranscript(transcript.trim());
+                let currentResult = event.results[event.results.length - 1];  // Prendre seulement le dernier résultat
+                transcript = currentResult[0].transcript.trim();  // Capturer la dernière phrase entendue
+
+                analyzeTranscript(transcript);
             };
 
             recognition.onerror = (event) => {
