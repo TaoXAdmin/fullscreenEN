@@ -13,19 +13,38 @@
             height: 100vh;
             background-color: #000;
         }
-        video {
+
+        .video-container {
+            position: relative;
             max-width: 100%;
+        }
+
+        video {
+            display: block;
+            width: 100%;
             height: auto;
-            background-color: #000;
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            z-index: 2;
+            pointer-events: none; /* Allows clicks to pass through */
         }
     </style>
 </head>
 <body>
-
-    <video id="myVideo" playsinline controls x-webkit-airplay="allow" webkit-playsinline controlslist="nodownload" preload="auto" width="100%" height="auto">
-        <source src="https://www.w3schools.com/html/mov_bbbb.mp4" type="video/mp4">
-        <h1>TEST VISIBILITE</h1>test
-    </video>
+    <div class="video-container">
+        <h1 class="overlay-text">TEST VISIBILITE</h1>
+        <video id="myVideo" playsinline controls x-webkit-airplay="allow" webkit-playsinline controlslist="nodownload" preload="auto">
+            <source src="https://www.w3schools.com/html/mov_bbbb.mp4" type="video/mp4">
+        </video>
+    </div>
 
     <script>
         const video = document.getElementById('myVideo');
@@ -48,6 +67,5 @@
             }
         });
     </script>
-
 </body>
 </html>
