@@ -35,52 +35,46 @@
             font-size: 2rem;
             text-align: center;
             z-index: 2;
-            pointer-events: none; /* Allows clicks to pass through */
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
     <div class="video-container" id="videoContainer">
-        <h1 class="overlay-text">TEST VISIBILITE</h1>
+       
         <video muted id="myVideo" playsinline controls x-webkit-airplay="allow" webkit-playsinline controlslist="nodownload" preload="auto">
             <source src="black.mp4" type="video/mp4">
         </video>
     </div>
 
+    <button id="startRecognition" style="position: absolute; top: 10px; right: 10px; z-index: 3;">Activer le microphone</button>
+
     <script>
         const videoContainer = document.getElementById('videoContainer');
         const video = document.getElementById('myVideo');
+        const startRecognitionButton = document.getElementById('startRecognition');
 
-        // Function to handle fullscreen across all browsers, including Safari
+        // Fonction pour gérer le plein écran sur tous les navigateurs, y compris Safari
         function openFullscreen(elem) {
-            // For most browsers
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
-            } 
-            // For Safari (older versions)
-            else if (elem.webkitRequestFullscreen) {
+            } else if (elem.webkitRequestFullscreen) {
                 elem.webkitRequestFullscreen();
-            } 
-            // For Safari (newer versions)
-            else if (elem.webkitEnterFullscreen) {
+            } else if (elem.webkitEnterFullscreen) {
                 elem.webkitEnterFullscreen();
-            } 
-            // For Safari on iPhone (where only the video element can be fullscreen)
-            else if (elem.children[0].webkitEnterFullscreen) {
+            } else if (elem.children[0].webkitEnterFullscreen) {
                 elem.children[0].webkitEnterFullscreen();
-            } 
-            // For Internet Explorer 11
-            else if (elem.msRequestFullscreen) {
+            } else if (elem.msRequestFullscreen) {
                 elem.msRequestFullscreen();
             }
         }
 
-        // Event listener for double click to trigger fullscreen
+        // Écouteur d'événement pour double clic afin de déclencher le plein écran
         videoContainer.addEventListener('dblclick', () => {
             openFullscreen(videoContainer);
         });
 
-        // Event listeners for fullscreen changes
+        // Gestion des changements de plein écran
         document.addEventListener('fullscreenchange', function() {
             if (!document.fullscreenElement && video.paused) {
                 video.play();
@@ -92,6 +86,41 @@
                 video.play();
             }
         });
+
+        // Fonction de reconnaissance vocale
+        function startSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'fr-FR';
+                recognition.continuous = true;
+                recognition.interimResults = false;
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+                    console.log('Transcription :', transcript);
+
+                    if (transcript.includes("partout")) {
+                        window.location.href = "https://www.wikipedia.org";
+                    }
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Erreur de reconnaissance vocale :', event.error);
+                };
+
+                recognition.onend = function() {
+                    console.log('Reconnaissance vocale terminée.');
+                };
+
+                recognition.start();
+                console.log('Reconnaissance vocale commencée.');
+            } else {
+                alert("Votre navigateur ne supporte pas la reconnaissance vocale.");
+            }
+        }
+
+        // Démarrer la reconnaissance vocale lorsque l'utilisateur clique sur le bouton
+        startRecognitionButton.addEventListener('click', startSpeechRecognition);
     </script>
 </body>
 </html>
