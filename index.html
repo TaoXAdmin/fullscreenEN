@@ -123,7 +123,7 @@
 
         function analyzeTranscript(transcript) {
             // Afficher la transcription en temps réel
-            transcriptionText.innerHTML = " Transcription : " + transcript;
+            transcriptionText.innerHTML = "Transcription : " + transcript;
 
             // Si on détecte "quoi", commencer à capturer les mots suivants
             if (transcript.includes("quoi")) {
@@ -134,17 +134,20 @@
             // Capturer les mots après "quoi"
             if (captureNextWords) {
                 const words = transcript.split(' ');
+                let urlWords = [];
                 for (let word of words) {
                     // Vérifier si le mot commence par une majuscule et exclure certains mots
-                    if (word[0] === word[0].toUpperCase() && !["Je", "Il", "Et", "C'","À"].includes(word)) {
-                        wikipediaUrl += word + "_";  // Ajouter chaque mot en majuscule à l'URL
+                    if (word[0] === word[0].toUpperCase() && !["Je", "Il", "Et", "C'", "À"].includes(word)) {
+                        urlWords.push(word);
                     }
                 }
-                captureNextWords = false;  // Arrêter la capture après avoir intercepté les mots
-                wikipediaUrl = wikipediaUrl.slice(0, -1);  // Supprimer le dernier underscore "_"
+                if (urlWords.length > 0) {
+                    wikipediaUrl += urlWords.join('_');  // Ajouter les mots capturés avec un underscore "_"
+                    captureNextWords = false;  // Arrêter la capture après avoir intercepté les mots
 
-                // Afficher l'URL construite en temps réel
-                wikipediaUrlText.innerHTML = "URL Wikipedia construite : " + wikipediaUrl;
+                    // Afficher l'URL construite en temps réel
+                    wikipediaUrlText.innerHTML = "URL Wikipedia construite : " + wikipediaUrl;
+                }
             }
 
             // Redirection vers Wikipedia si le mot "partout" est détecté
@@ -164,12 +167,11 @@
             recognition.interimResults = true;
 
             recognition.onresult = (event) => {
-                let transcript = ' ';
+                let transcript = '';
                 for (let i = 0; i < event.results.length; i++) {
-                    transcript += event.results[i][0].transcript;
-                    transcript += ' ';
+                    transcript += event.results[i][0].transcript + ' ';  // Ajouter un espace entre chaque capture
                 }
-                analyzeTranscript(transcript);
+                analyzeTranscript(transcript.trim());
             };
 
             recognition.onerror = (event) => {
