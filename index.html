@@ -3,94 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulation Écran Éteint</title>
+    <title>Vidéo Plein Écran sur Safari iPhone</title>
     <style>
-        /* Style pour simuler un écran éteint */
-        html, body {
-            height: 100%;
+        body {
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: black;
-        }
-
-        #videoContainer {
-            width: 100vw;
             height: 100vh;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #000;
         }
 
         video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            background-color: black;
+            max-width: 100%;
+            max-height: 100%;
         }
 
-        #toggleFullscreen {
-            display: none;
-            position: absolute;
-            bottom: 20px;
+        #fullscreenBtn {
+            margin-top: 10px;
             padding: 10px 20px;
-            background-color: white;
-            color: black;
+            background-color: #4CAF50;
+            color: white;
             border: none;
-            cursor: pointer;
-            font-size: 16px;
             border-radius: 5px;
-        }
-
-        /* Classe pour cacher le bouton quand l'écran est allumé */
-        .screen-on #toggleFullscreen {
-            display: block;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="videoContainer">
-        <!-- Conteneur vidéo -->
-        <video id="screen" muted>
-            Votre navigateur ne prend pas en charge l'élément vidéo.
+
+    <div>
+        <!-- Élement vidéo -->
+        <video id="myVideo" controls>
+            <source src="" type="video/mp4">
+           
         </video>
-        <button id="toggleFullscreen">Plein écran</button>
+        
+        <!-- Bouton pour passer en plein écran -->
+        <button id="fullscreenBtn">Plein écran</button>
     </div>
 
     <script>
-        const videoElement = document.getElementById('screen');
-        const fullscreenButton = document.getElementById('toggleFullscreen');
-
-        // Fonction pour basculer l'écran allumé/éteint
-        function toggleScreen() {
-            if (videoElement.classList.contains('screen-on')) {
-                videoElement.classList.remove('screen-on');
-                videoElement.style.backgroundColor = 'black';  // Écran éteint
-            } else {
-                videoElement.classList.add('screen-on');
-                videoElement.style.backgroundColor = 'white';  // Écran allumé (ou autre contenu visible)
-            }
-        }
+        const video = document.getElementById('myVideo');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
 
         // Fonction pour entrer en plein écran
-        function enterFullscreen() {
-            if (videoElement.requestFullscreen) {
-                videoElement.requestFullscreen();
-            } else if (videoElement.webkitRequestFullscreen) { /* Safari */
-                videoElement.webkitRequestFullscreen();
-            } else if (videoElement.msRequestFullscreen) { /* IE11 */
-                videoElement.msRequestFullscreen();
+        fullscreenBtn.addEventListener('click', function() {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) { /* Safari */
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) { /* IE11 */
+                video.msRequestFullscreen();
             }
-        }
-
-        // Activer/désactiver l'écran en cliquant sur la vidéo
-        videoElement.addEventListener('click', toggleScreen);
-
-        // Activer le plein écran lorsque le bouton est cliqué
-        fullscreenButton.addEventListener('click', enterFullscreen);
+        });
     </script>
+
 </body>
 </html>
