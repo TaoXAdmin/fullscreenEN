@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vidéo Plein Écran</title>
+    <title>Vidéo Plein Écran avec Microphone</title>
     <style>
         body {
             margin: 0;
@@ -41,20 +41,17 @@
 </head>
 <body>
     <div class="video-container" id="videoContainer">
-       
+        <h1 class="overlay-text">TEST VISIBILITE</h1>
         <video muted id="myVideo" playsinline controls x-webkit-airplay="allow" webkit-playsinline controlslist="nodownload" preload="auto">
             <source src="black.mp4" type="video/mp4">
         </video>
     </div>
 
-    <button id="startRecognition" style="position: absolute; top: 10px; right: 10px; z-index: 3;">Activer le microphone</button>
-
     <script>
         const videoContainer = document.getElementById('videoContainer');
         const video = document.getElementById('myVideo');
-        const startRecognitionButton = document.getElementById('startRecognition');
 
-        // Fonction pour gérer le plein écran sur tous les navigateurs, y compris Safari
+        // Fonction pour activer le plein écran
         function openFullscreen(elem) {
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
@@ -69,12 +66,12 @@
             }
         }
 
-        // Écouteur d'événement pour double clic afin de déclencher le plein écran
+        // Détection du double-clic pour le plein écran
         videoContainer.addEventListener('dblclick', () => {
             openFullscreen(videoContainer);
         });
 
-        // Gestion des changements de plein écran
+        // Gestion du changement de mode plein écran
         document.addEventListener('fullscreenchange', function() {
             if (!document.fullscreenElement && video.paused) {
                 video.play();
@@ -87,40 +84,73 @@
             }
         });
 
-        // Fonction de reconnaissance vocale
-        function startSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window) {
-                const recognition = new webkitSpeechRecognition();
-                recognition.lang = 'fr-FR';
-                recognition.continuous = true;
-                recognition.interimResults = false;
+        // Ajout de la reconnaissance vocale
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isListening = false;
 
-                recognition.onresult = function(event) {
-                    const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
-                    console.log('Transcription :', transcript);
-
-                    if (transcript.includes("partout")) {
-                        window.location.href = "https://www.wikipedia.org";
-                    }
-                };
-
-                recognition.onerror = function(event) {
-                    console.error('Erreur de reconnaissance vocale :', event.error);
-                };
-
-                recognition.onend = function() {
-                    console.log('Reconnaissance vocale terminée.');
-                };
-
+        function startRecognition() {
+            if (!isListening) {
                 recognition.start();
+                isListening = true;
                 console.log('Reconnaissance vocale commencée.');
-            } else {
-                alert("Votre navigateur ne supporte pas la reconnaissance vocale.");
             }
         }
 
-        // Démarrer la reconnaissance vocale lorsque l'utilisateur clique sur le bouton
-        startRecognitionButton.addEventListener('click', startSpeechRecognition);
+        function stopRecognition() {
+            if (isListening) {
+                recognition.stop();
+                isListening = false;
+                console.log('Reconnaissance vocale arrêtée.');
+            }
+        }
+
+        function analyzeTranscript(transcript) {
+            // Redirection vers Wikipedia si le mot "partout" est détecté
+            if (transcript.includes("partout")) {
+                window.location.href = "https://www.wikipedia.org";
+            }
+        }
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = 0; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                analyzeTranscript(transcript.toLowerCase());
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Erreur de reconnaissance vocale :', event.error);
+                stopRecognition();
+                startRecognition();
+            };
+
+            recognition.onend = () => {
+                console.log('Reconnaissance vocale terminée.');
+                isListening = false;
+                startRecognition();
+            };
+
+            document.addEventListener('DOMContentLoaded', () => {
+                startRecognition();
+            });
+
+            window.addEventListener('focus', () => {
+                if (!isListening) {
+                    startRecognition();
+                }
+            });
+
+        } else {
+            alert("Votre navigateur ne supporte pas la reconnaissance vocale.");
+        }
     </script>
 </body>
 </html>
