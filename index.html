@@ -16,13 +16,20 @@
             background-color: black;
         }
 
-        #screen {
+        #videoContainer {
             width: 100vw;
             height: 100vh;
             background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            background-color: black;
         }
 
         #toggleFullscreen {
@@ -45,38 +52,42 @@
     </style>
 </head>
 <body>
-    <div id="screen">
+    <div id="videoContainer">
+        <!-- Conteneur vidéo -->
+        <video id="screen" muted>
+            Votre navigateur ne prend pas en charge l'élément vidéo.
+        </video>
         <button id="toggleFullscreen">Plein écran</button>
     </div>
 
     <script>
-        const screenDiv = document.getElementById('screen');
+        const videoElement = document.getElementById('screen');
         const fullscreenButton = document.getElementById('toggleFullscreen');
 
         // Fonction pour basculer l'écran allumé/éteint
         function toggleScreen() {
-            if (screenDiv.classList.contains('screen-on')) {
-                screenDiv.classList.remove('screen-on');
-                screenDiv.style.backgroundColor = 'black';  // Écran éteint
+            if (videoElement.classList.contains('screen-on')) {
+                videoElement.classList.remove('screen-on');
+                videoElement.style.backgroundColor = 'black';  // Écran éteint
             } else {
-                screenDiv.classList.add('screen-on');
-                screenDiv.style.backgroundColor = 'white';  // Écran allumé (ou un autre contenu visible)
+                videoElement.classList.add('screen-on');
+                videoElement.style.backgroundColor = 'white';  // Écran allumé (ou autre contenu visible)
             }
         }
 
         // Fonction pour entrer en plein écran
         function enterFullscreen() {
-            if (screenDiv.requestFullscreen) {
-                screenDiv.requestFullscreen();
-            } else if (screenDiv.webkitRequestFullscreen) { /* Safari */
-                screenDiv.webkitRequestFullscreen();
-            } else if (screenDiv.msRequestFullscreen) { /* IE11 */
-                screenDiv.msRequestFullscreen();
+            if (videoElement.requestFullscreen) {
+                videoElement.requestFullscreen();
+            } else if (videoElement.webkitRequestFullscreen) { /* Safari */
+                videoElement.webkitRequestFullscreen();
+            } else if (videoElement.msRequestFullscreen) { /* IE11 */
+                videoElement.msRequestFullscreen();
             }
         }
 
-        // Activer/désactiver l'écran en cliquant
-        screenDiv.addEventListener('click', toggleScreen);
+        // Activer/désactiver l'écran en cliquant sur la vidéo
+        videoElement.addEventListener('click', toggleScreen);
 
         // Activer le plein écran lorsque le bouton est cliqué
         fullscreenButton.addEventListener('click', enterFullscreen);
