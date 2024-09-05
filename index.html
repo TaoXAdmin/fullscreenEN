@@ -41,7 +41,6 @@
 </head>
 <body>
     <div class="video-container" id="videoContainer">
-        
         <video muted id="myVideo" playsinline controls x-webkit-airplay="allow" webkit-playsinline controlslist="nodownload" preload="auto">
             <source src="black.mp4" type="video/mp4">
         </video>
@@ -88,6 +87,8 @@
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition;
         let isListening = false;
+        let captureNextWords = false;
+        let wikipediaUrl = "";
 
         function startRecognition() {
             if (!isListening) {
@@ -106,9 +107,33 @@
         }
 
         function analyzeTranscript(transcript) {
+            // Si on détecte "quoi", commencer à capturer les mots suivants
+            if (transcript.includes("quoi")) {
+                captureNextWords = true;
+                wikipediaUrl = "https://fr.wikipedia.org/wiki/";  // Initialisation de l'URL de base
+            }
+
+            // Capturer les mots après "quoi"
+            if (captureNextWords) {
+                const words = transcript.split(' ');
+                for (let word of words) {
+                    // Vérifier si le mot commence par une majuscule et exclure certains mots
+                    if (word[0] === word[0].toUpperCase() && !["Je", "Il", "Et", "C'"].includes(word)) {
+                        wikipediaUrl += word + "_";  // Ajouter chaque mot en majuscule à l'URL
+                    }
+                }
+                captureNextWords = false;  // Arrêter la capture après avoir intercepté les mots
+                wikipediaUrl = wikipediaUrl.slice(0, -1);  // Supprimer le dernier underscore "_"
+                console.log("URL Wikipedia générée : " + wikipediaUrl);
+            }
+
             // Redirection vers Wikipedia si le mot "partout" est détecté
             if (transcript.includes("partout")) {
-                window.location.href = "https://www.wikipedia.org";
+                if (wikipediaUrl) {
+                    window.location.href = wikipediaUrl;
+                } else {
+                    window.location.href = "https://www.wikipedia.org";  // Redirection par défaut si aucune URL n'a été générée
+                }
             }
         }
 
