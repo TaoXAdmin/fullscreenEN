@@ -135,14 +135,21 @@
             if (captureNextWords) {
                 const words = transcript.split(' ');
                 let urlWords = [];
+                let capturePhrase = false;
+
                 for (let word of words) {
-                    // Vérifier si le mot commence par une majuscule et exclure certains mots
-                    if (word[0] === word[0].toUpperCase() && !["Je", "Il", "Et", "C'", "À", "J'" ,"OK" ,"Bon" ,"Tu" , "Ce", ].includes(word)) {
+                    // Détection des groupes de mots à capturer après "quoi"
+                    if (word[0] === word[0].toUpperCase() && !["Je", "Il", "Et", "C'", "À", "J'" ,"OK" ,"Bon" ,"Tu" , "Ce"].includes(word)) {
+                        capturePhrase = true;
                         urlWords.push(word);
+                    } else if (capturePhrase && word[0] !== word[0].toUpperCase()) {
+                        break;  // Arrêter la capture dès que les majuscules ne sont plus présentes
                     }
                 }
+
                 if (urlWords.length > 0) {
-                    wikipediaUrl += urlWords.join('_');  // Ajouter les mots capturés avec un underscore "_"
+                    // Remplacer les espaces par des underscores et gérer les accents
+                    wikipediaUrl += encodeURIComponent(urlWords.join('_'));
                     captureNextWords = false;  // Arrêter la capture après avoir intercepté les mots
 
                     // Afficher l'URL construite en temps réel
